@@ -7,7 +7,7 @@ public interface TestService {
 
     void startTest();
 
-    int runTest(Student student);
+    int runTest();
 
     boolean checkAnswer(Question question, String answer);
 }

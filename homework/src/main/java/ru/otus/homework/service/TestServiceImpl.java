@@ -28,7 +28,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public void startTest() {
         Student student = studentService.getStudentName();
-        int result = runTest(student);
+        int result = runTest();
         printService.writeInfo("Your result: " + result + " Minimal for success: " + minCorrectAnswer);
         if (result>=minCorrectAnswer){
             printService.writeInfo("Congratulation " + student.toString() + "! Test Passed!");
@@ -36,7 +36,7 @@ public class TestServiceImpl implements TestService {
     }
 
     @Override
-    public int runTest(Student student) {
+    public int runTest() {
         int counter=0;
         List<Question> questionList = testServiceDao.getAllQuestions();
         if(questionList!=null) {
