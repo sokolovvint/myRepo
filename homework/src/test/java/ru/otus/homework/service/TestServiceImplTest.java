@@ -22,11 +22,11 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class TestServiceImplTest {
 
-    private static final String TEST_CSV ="Calculate 2x2?,1,2,3,4,5,6\n" +
-            "To be or not to Be?,\n" +
-            "Select European countries:,France,Mexico,Brazil,Austria,Nigeria,Italy\n" +
-            "Is there life on Mars?,\n" +
-            "Select the summer months:,February,March,July,November,January,August,December,June";
+    private static final String TEST_CSV ="Calculate 2x2?,%4\n" +
+            "To be or Not to be?,%To be\n" +
+            "Select European countries:,France,Mexico,Brazil,Nigeria,Italy,%France,Italy\n" +
+            "Is there life on Mars?,Yes,No,%No\n" +
+            "Select the summer months:,February,March,July,November,January,August,December,June,%July,August,June";
 
     @Mock
     private ResourceLoader resourceLoader;
