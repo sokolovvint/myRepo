@@ -9,12 +9,16 @@ import java.util.Scanner;
 @Service
 public class PrintServiceImpl implements PrintService {
 
-    private static Logger logger = LoggerFactory.getLogger(PrintServiceImpl.class.getName());
+    private static final Logger logger = LoggerFactory.getLogger(PrintServiceImpl.class.getName());
 
     private Scanner scanner;
 
     public PrintServiceImpl() {
-        scanner = new Scanner(System.in);
+        this.scanner = new Scanner(System.in);
+    }
+
+    public PrintServiceImpl(Scanner scanner) {
+        this.scanner = scanner;
     }
 
     @Override
