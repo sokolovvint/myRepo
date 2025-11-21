@@ -2,7 +2,7 @@ package ru.otus.homework.service;
 
 import ru.otus.homework.dto.Question;
 
-public interface TestService {
+public interface ExamService {
 
     void startTest();
 

@@ -1,14 +1,16 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.otus.homework.dto.Student;
 
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    @Autowired
     PrintService printService;
+
+    public StudentServiceImpl(PrintService printService) {
+        this.printService = printService;
+    }
 
     @Override
     public Student getStudentName() {

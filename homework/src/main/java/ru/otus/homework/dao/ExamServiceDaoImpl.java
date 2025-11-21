@@ -2,7 +2,6 @@ package ru.otus.homework.dao;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -17,14 +16,14 @@ import java.util.Arrays;
 import java.util.List;
 
 @Component
-public class TestServiceDaoImpl implements TestServiceDao {
+public class ExamServiceDaoImpl implements ExamServiceDao {
 
     private Resource resource;
 
-    @Autowired
     private PrintService printService;
 
-    public TestServiceDaoImpl(ResourceLoader resourceLoader,  @Value("${question.path}") String questionPath) {
+    public ExamServiceDaoImpl(ResourceLoader resourceLoader, PrintService printService, @Value("${question.path}") String questionPath) {
+        this.printService = printService;
         this.resource = resourceLoader.getResource(questionPath);
     }
 

@@ -1,4 +1,4 @@
-package ru.otus.homework.dao;
+package ru.otus.homework.service;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -8,13 +8,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import ru.otus.homework.dao.TestServiceDaoImpl;
+import org.springframework.test.util.ReflectionTestUtils;
+import ru.otus.homework.dao.ExamServiceDao;
+import ru.otus.homework.dao.ExamServiceDaoImpl;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class TestServiceDaoImplTest {
+class ExamServiceImplTest {
 
     private static final String TEST_CSV ="Calculate 2x2?,%4\n" +
             "To be or Not to be?,%To be\n" +
@@ -25,13 +27,24 @@ class TestServiceDaoImplTest {
     @Mock
     private ResourceLoader resourceLoader;
 
+    @Mock
+    private PrintService printService;
+
+    private ExamServiceDao examServiceDao;
+
+    private StudentService studentService;
+
     @Test
-    void getAllQuestions() {
+    void startTest() {
         Resource resource = new ByteArrayResource(TEST_CSV.getBytes(), "testResource");
         when(resourceLoader.getResource("classpath:questions.csv")).thenReturn(resource);
 
-        TestServiceDaoImpl testServiceDao = new TestServiceDaoImpl(resourceLoader, "classpath:questions.csv");
-        assertEquals(5, testServiceDao.getAllQuestions().size());
-    }
+        examServiceDao = new ExamServiceDaoImpl(resourceLoader, printService, "classpath:questions.csv");
+        studentService = new StudentServiceImpl(printService);
+        ExamService examService = new ExamServiceImpl(examServiceDao, printService, studentService, 3);
 
+        when(printService.readLine(Mockito.anyString())).thenReturn("Mock");
+
+        assertDoesNotThrow(() -> examService.startTest());
+    }
 }

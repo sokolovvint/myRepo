@@ -1,9 +1,8 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import ru.otus.homework.dao.TestServiceDao;
+import ru.otus.homework.dao.ExamServiceDao;
 import ru.otus.homework.dto.Question;
 import ru.otus.homework.dto.Student;
 
@@ -11,19 +10,22 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class TestServiceImpl implements TestService {
+public class ExamServiceImpl implements ExamService {
 
-    @Autowired
-    private TestServiceDao testServiceDao;
+    private ExamServiceDao examServiceDao;
 
-    @Autowired
     private PrintService printService;
 
-    @Autowired
     private StudentService studentService;
 
-    @Value("${min.correct.answer:3}")
     int minCorrectAnswer;
+
+    public ExamServiceImpl(ExamServiceDao examServiceDao, PrintService printService, StudentService studentService, @Value("${min.correct.answer:3}") int minCorrectAnswer) {
+        this.examServiceDao = examServiceDao;
+        this.printService = printService;
+        this.studentService = studentService;
+        this.minCorrectAnswer = minCorrectAnswer;
+    }
 
     @Override
     public void startTest() {
@@ -38,7 +40,7 @@ public class TestServiceImpl implements TestService {
     @Override
     public int runTest() {
         int counter=0;
-        List<Question> questionList = testServiceDao.getAllQuestions();
+        List<Question> questionList = examServiceDao.getAllQuestions();
         if(questionList!=null) {
             for (Question question: questionList) {
                 printService.writeInfo(question.getText());
