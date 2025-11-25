@@ -1,0 +1,12 @@
+spring:
+  messages:
+    baseName: i18n/messages
+    encoding: UTF-8
+server:
+  port: 8099
+exam:
+  minCorrectAnswer: 3
+  locale: ru-RU
+  questionPathByLocale:
+    en-US: questions.csv
+    ru-RU: questions_ru.csv

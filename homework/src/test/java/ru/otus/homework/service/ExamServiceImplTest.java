@@ -8,9 +8,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.test.util.ReflectionTestUtils;
+import ru.otus.homework.config.ApplicationConfig;
 import ru.otus.homework.dao.ExamServiceDao;
 import ru.otus.homework.dao.ExamServiceDaoImpl;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.when;
@@ -34,16 +37,25 @@ class ExamServiceImplTest {
 
     private StudentService studentService;
 
+    private ApplicationConfig applicationConfig;
+
     @Test
     void startTest() {
         Resource resource = new ByteArrayResource(TEST_CSV.getBytes(), "testResource");
         when(resourceLoader.getResource("classpath:questions.csv")).thenReturn(resource);
 
-        examServiceDao = new ExamServiceDaoImpl(resourceLoader, printService, "classpath:questions.csv");
+        applicationConfig = new ApplicationConfig();
+        applicationConfig.setLocale("en-US");
+        applicationConfig.setMinCorrectAnswer(3);
+        Map<String, String> map = new HashMap<>();
+        map.put("en-US","questions.csv");
+        applicationConfig.setQuestionPathByLocale(map);
+        examServiceDao = new ExamServiceDaoImpl(resourceLoader, printService, applicationConfig);
         studentService = new StudentServiceImpl(printService);
-        ExamService examService = new ExamServiceImpl(examServiceDao, printService, studentService, 3);
+        ExamService examService = new ExamServiceImpl(examServiceDao, printService, studentService, applicationConfig);
 
-        when(printService.readLine(Mockito.anyString())).thenReturn("Mock");
+        when(printService.readLocalizedLine(Mockito.anyString())).thenReturn("Mock");
+        when(printService.readLocalizedLine(Mockito.anyString(), Mockito.anyCollection())).thenReturn("Mock");
 
         assertDoesNotThrow(() -> examService.startTest());
     }
