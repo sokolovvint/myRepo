@@ -6,7 +6,7 @@ import ru.otus.homework.dto.Student;
 @Service
 public class StudentServiceImpl implements StudentService {
 
-    PrintService printService;
+    private PrintService printService;
 
     public StudentServiceImpl(PrintService printService) {
         this.printService = printService;
@@ -15,8 +15,8 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student getStudentName() {
         Student student = new Student();
-        student.setFirstName(printService.readLine("Enter your first name: "));
-        student.setLastName(printService.readLine("Enter your last name: "));
+        student.setFirstName(printService.readLocalizedLine("enter.your.first.name"));
+        student.setLastName(printService.readLocalizedLine("enter.your.second.name"));
         return student;
     }
 }

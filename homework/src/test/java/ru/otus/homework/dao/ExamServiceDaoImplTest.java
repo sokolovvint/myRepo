@@ -7,7 +7,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
+import ru.otus.homework.config.ApplicationConfig;
 import ru.otus.homework.service.PrintService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.when;
@@ -27,12 +31,18 @@ class ExamServiceDaoImplTest {
     @Mock
     private PrintService printService;
 
+    private ApplicationConfig applicationConfig;
+
     @Test
     void getAllQuestions() {
         Resource resource = new ByteArrayResource(TEST_CSV.getBytes(), "testResource");
         when(resourceLoader.getResource("classpath:questions.csv")).thenReturn(resource);
-
-        ExamServiceDaoImpl testServiceDao = new ExamServiceDaoImpl(resourceLoader, printService, "classpath:questions.csv");
+        applicationConfig = new ApplicationConfig();
+        applicationConfig.setLocale("en-US");
+        Map<String, String> map = new HashMap<>();
+        map.put("en-US","questions.csv");
+        applicationConfig.setQuestionPathByLocale(map);
+        ExamServiceDaoImpl testServiceDao = new ExamServiceDaoImpl(resourceLoader, printService, applicationConfig);
         assertEquals(5, testServiceDao.getAllQuestions().size());
     }
 

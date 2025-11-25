@@ -2,10 +2,10 @@ package ru.otus.homework.dao;
 
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
+import ru.otus.homework.config.ApplicationConfig;
 import ru.otus.homework.dto.Question;
 import ru.otus.homework.service.PrintService;
 
@@ -22,9 +22,11 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
 
     private PrintService printService;
 
-    public ExamServiceDaoImpl(ResourceLoader resourceLoader, PrintService printService, @Value("${question.path}") String questionPath) {
+    public ExamServiceDaoImpl(ResourceLoader resourceLoader,
+                              PrintService printService,
+                              ApplicationConfig applicationConfig) {
         this.printService = printService;
-        this.resource = resourceLoader.getResource(questionPath);
+        this.resource = resourceLoader.getResource("classpath:"+applicationConfig.getQuestionPathByLocale().get(applicationConfig.getLocale()));
     }
 
     @Override
@@ -49,7 +51,7 @@ public class ExamServiceDaoImpl implements ExamServiceDao {
             }
 
         } catch (IOException | CsvException e) {
-            printService.writeInfo(String.format("Error reading CSV: %s", e));
+            printService.writeInfo(printService.getLocalizedMessage("error.reading.csv", String.valueOf(e)));
         }
         return questions;
     }

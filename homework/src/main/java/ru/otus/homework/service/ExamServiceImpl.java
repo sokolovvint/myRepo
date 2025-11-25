@@ -1,7 +1,7 @@
 package ru.otus.homework.service;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.otus.homework.config.ApplicationConfig;
 import ru.otus.homework.dao.ExamServiceDao;
 import ru.otus.homework.dto.Question;
 import ru.otus.homework.dto.Student;
@@ -18,22 +18,25 @@ public class ExamServiceImpl implements ExamService {
 
     private StudentService studentService;
 
-    int minCorrectAnswer;
+    private int minCorrectAnswer;
 
-    public ExamServiceImpl(ExamServiceDao examServiceDao, PrintService printService, StudentService studentService, @Value("${min.correct.answer:3}") int minCorrectAnswer) {
+    public ExamServiceImpl(ExamServiceDao examServiceDao,
+                           PrintService printService,
+                           StudentService studentService,
+                           ApplicationConfig applicationConfig) {
         this.examServiceDao = examServiceDao;
         this.printService = printService;
         this.studentService = studentService;
-        this.minCorrectAnswer = minCorrectAnswer;
+        this.minCorrectAnswer = applicationConfig.getMinCorrectAnswer();
     }
 
     @Override
     public void startTest() {
         Student student = studentService.getStudentName();
         int result = runTest();
-        printService.writeInfo("Your result: " + result + " Minimal for success: " + minCorrectAnswer);
+        printService.writeLocalizedInfo("your.result", result, minCorrectAnswer);
         if (result>=minCorrectAnswer){
-            printService.writeInfo("Congratulation " + student.toString() + "! Test Passed!");
+            printService.writeLocalizedInfo("congratulation.test.passed", student.toString());
         }
     }
 
@@ -48,16 +51,16 @@ public class ExamServiceImpl implements ExamService {
                 List<String> allAnswers = question.getAnswers();
                 String answer = "";
                 if (allAnswers.isEmpty()) {
-                    answer = printService.readLine("Enter your answer: ");
+                    answer = printService.readLocalizedLine("enter.your.answer");
                 } else {
-                    answer = printService.readLine(String.format("Choose the right answers %s:", allAnswers));
+                    answer = printService.readLocalizedLine("choose.right.answers", allAnswers);
                 }
                 if (checkAnswer(question, answer)) {
                     counter++;
-                    printService.writeInfo("CORRECT!");
+                    printService.writeLocalizedInfo("correct");
                 }
                 else{
-                    printService.writeInfo("WRONG!");
+                    printService.writeLocalizedInfo("wrong");
                 }
             }
         }
